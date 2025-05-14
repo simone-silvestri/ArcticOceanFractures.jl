@@ -1,3 +1,5 @@
+using Printf
+
 function progress(sim)
     sea_ice = sim.model.sea_ice
     ocean   = sim.model.ocean
