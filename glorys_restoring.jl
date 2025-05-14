@@ -22,8 +22,8 @@ function mask(λ, φ, z, t)
     return m
 end
 
-T_meta_rest = Metadatum(:temperature; dataset=ECCO4Monthly(), start_date, end_date, dir="data/") 
-S_meta_rest = Metadatum(:salinity;    dataset=ECCO4Monthly(), start_date, end_date, dir="data/") 
+T_meta_rest = Metadata(:temperature; dataset=ECCO4Monthly(), start_date, end_date, dir="data/") 
+S_meta_rest = Metadata(:salinity;    dataset=ECCO4Monthly(), start_date, end_date, dir="data/") 
 
 kwargs = (; rate = 1/10days, mask, time_indexing=Linear(), time_indices_in_memory=5)
 
