@@ -1,15 +1,12 @@
-using PythonCall
 using ClimaOcean
-using ClimaOcean.Copernicus
 using ClimaOcean.ECCO
 using ClimaOcean.DataWrangling
 using Oceananigans
 using Oceananigans.OutputReaders
 
-bounding_box = DataWrangling.BoundingBox(longitude=(-180.0, 180.0), latitude=(0.0, 90.0), z=(-6000, 0))
 
-T_meta_init = Metadatum(:temperature; dataset=GLORYSDaily(), date=start_date, bounding_box, dir="data/") 
-S_meta_init = Metadatum(:salinity;    dataset=GLORYSDaily(), date=start_date, bounding_box, dir="data/") 
+T_meta_init = Metadatum(:temperature; dataset=ECCO4Monthly(), date=start_date, dir="data/") 
+S_meta_init = Metadatum(:salinity;    dataset=ECCO4Monthly(), date=start_date, dir="data/") 
 
 SI_meta_init = Metadatum(:sea_ice_concentration; dataset=ECCO4Monthly(), date=start_date, dir="data/")
 SC_meta_init = Metadatum(:sea_ice_concentration; dataset=ECCO4Monthly(), date=start_date, dir="data/")
