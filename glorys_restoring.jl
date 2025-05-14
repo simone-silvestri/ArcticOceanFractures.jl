@@ -10,8 +10,8 @@ bounding_box = DataWrangling.BoundingBox(longitude=(-180.0, 180.0), latitude=(35
 T_meta_init = Metadatum(:temperature; dataset=GLORYSDaily(), date=start_date, bounding_box, dir="data/") 
 S_meta_init = Metadatum(:salinity;    dataset=GLORYSDaily(), date=start_date, bounding_box, dir="data/") 
 
-SI_meta_init = Metadata(:sea_ice_concentration; dataset=GLORYSDaily(), date=start_date, bounding_box, dir="data/")
-SC_meta_init = Metadata(:sea_ice_concentration; dataset=GLORYSDaily(), date=start_date, bounding_box, dir="data/")
+SI_meta_init = Metadatum(:sea_ice_concentration; dataset=GLORYSDaily(), date=start_date, bounding_box, dir="data/")
+SC_meta_init = Metadatum(:sea_ice_concentration; dataset=GLORYSDaily(), date=start_date, bounding_box, dir="data/")
 
 # Restore quite strongly between 40 and 42.5 north then decrease linearly between 42.5 and 45 north
 function mask(λ, φ, z, t) 

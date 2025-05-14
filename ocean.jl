@@ -15,4 +15,4 @@ ocean = ocean_simulation(grid;
                          forcing,
                          closure)
 
-set!(ocean.model; T=first(T_meta), S=first(S_meta))
+set!(ocean.model; T=first(T_meta_init), S=first(S_meta_init))
