@@ -1,5 +1,7 @@
 using Printf
 
+wall_time = Ref(time_ns())
+
 function progress(sim)
     sea_ice = sim.model.sea_ice
     ocean   = sim.model.ocean
@@ -25,7 +27,7 @@ function progress(sim)
      return nothing
 end
 
-function arctic_outputs!(simulation)
+function arctic_outputs!(simulation, folder)
 
     # Extract the sea ice and ocean models from the simulation
     sea_ice = simulation.model.sea_ice
@@ -36,6 +38,12 @@ function arctic_outputs!(simulation)
     ℵ = sea_ice.model.ice_concentration
     u = sea_ice.model.velocities.u
     v = sea_ice.model.velocities.v
+    
+    # Define the variables to be saved
+    So = ocean.model.tracers.S
+    To = ocean.model.tracers.T
+    uo = ocean.model.velocities.u
+    vo = ocean.model.velocities.v
     
     # Fluxes
     Tu = ocean.model.interfaces.atmosphere_sea_ice_interface.temperature
@@ -50,14 +58,25 @@ function arctic_outputs!(simulation)
 
     # Output writers for variables and averages
     simulation.output_writers[:vars] = JLD2Writer(sea_ice.model, (; h, ℵ, u, v, Tu, Qˡ, Qˢ, Qⁱ, Qᶠ, Qᵗ, Qᴮ, τx, τy),
-                                                  filename = "sea_ice_quantities.jld2",
-                                                  schedule = IterationInterval(100),
+                                                  filename = folder * "sea_ice_quantities.jld2",
+                                                  schedule = TimeInterval(1days),
                                                   overwrite_existing=true)
 
     simulation.output_writers[:averages] = JLD2Writer(sea_ice.model, (; h, ℵ, Tu, Qˡ, Qˢ, Qⁱ, Qᶠ, Qᵗ, Qᴮ, u, v, τx, τy),
-                                                      filename = "averaged_sea_ice_quantities.jld2",
+                                                      filename = folder * "averaged_sea_ice_quantities.jld2",
                                                       schedule = AveragedTimeInterval(1days),
                                                       overwrite_existing=true)
+    
+    simulation.output_writers[:ovars] = JLD2Writer(ocean.model, (; uo, vo, wo, So, To), 
+                                                   filename = folder * "ocean_quantities.jld2",
+                                                   schedule = ConsecutiveTimeInterval(1days),
+                                                   overwrite_existing=true)
+
+    simulation.output_writers[:averages] = JLD2Writer(sea_ice.model, (; uo, vo, wo, So, To), 
+                                                      filename = folder * "averaged_ocean_quantities.jld2",
+                                                      schedule = AveragedTimeInterval(1days),
+                                                      overwrite_existing=true)
+
 
     return nothing
 end

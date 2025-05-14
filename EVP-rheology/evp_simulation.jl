@@ -1,14 +1,19 @@
 include("../ArcticOcean.jl")
 
 using .ArcticOcean
-using ArcticOcean: grid, ocean, atmosphere
-using ArcticOcean: SI_meta, SC_meta
-using ArcticOcean: arctic_outputs!
+using .ArcticOcean: grid, ocean, atmosphere
+using .ArcticOcean: SI_meta_init, SC_meta_init
+using .ArcticOcean: arctic_outputs!
 
 #####
 ##### A Prognostic Sea-ice model
 #####
 
+using ClimaOcean
+using ClimaSeaIce
+using Oceananigans
+using Oceananigans.Units
+using ClimaSeaIce.SeaIceThermodynamics: IceWaterThermalEquilibrium
 using ClimaSeaIce.SeaIceMomentumEquations
 using ClimaSeaIce.Rheologies
 
@@ -30,12 +35,14 @@ dynamics = SeaIceMomentumEquation(grid;
                                   rheology = ElastoViscoPlasticRheology(),
                                   solver = SplitExplicitSolver(120))
 
-sea_ice = sea_ice_simulation(grid; bottom_heat_boundary_condition, dynamics, advection=WENO(order=7))
+sea_ice = ClimaOcean.SeaIceSimulations.sea_ice_simulation(grid; bottom_heat_boundary_condition, dynamics, advection=WENO(order=7))
+set!(sea_ice.model.ice_thickness,     SI_meta_init; inpainting=nothing)
+set!(sea_ice.model.ice_concentration, SC_meta_init; inpainting=nothing)
 
-arctic = OceanSeaIceModel(ocean, sea_ice; atmosphere, radiation)
+arctic = OceanSeaIceModel(ocean, sea_ice; atmosphere)
 arctic = Simulation(arctic, Δt=2minutes, stop_time=365days)
 
-ArcticOcean.arctic_outputs!(arctic)
+ArcticOcean.arctic_outputs!(arctic, "EVP-rheology/")
 
 # And add it as a callback to the simulation.
 add_callback!(arctic, ArcticOcean.progress, IterationInterval(10))
