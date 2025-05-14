@@ -3,7 +3,7 @@
 momentum_advection = WENOVectorInvariant()
 tracer_advection   = WENO(order=7)
 
-free_surface = SplitExplicitFreeSurface(grid; cfl=0.7, fixed_Δt=10minutes)
+free_surface = SplitExplicitFreeSurface(grid; substeps=100)
 closure = ClimaOcean.OceanSimulations.default_ocean_closure()
 
 forcing = (T=RT, S=RS)
