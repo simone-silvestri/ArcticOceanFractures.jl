@@ -4,6 +4,7 @@ using ClimaOcean.Copernicus
 using ClimaOcean.ECCO
 using ClimaOcean.DataWrangling
 using Oceananigans
+using Oceananigans.OutputReaders
 
 bounding_box = DataWrangling.BoundingBox(longitude=(-180.0, 180.0), latitude=(35.0, 90.0), z=(-6000, 0))
 
@@ -26,5 +27,5 @@ S_meta_rest = Metadatum(:salinity;    dataset=ECCO4Monthly(), start_date, end_da
 
 kwargs = (; rate = 1/10days, mask, time_indexing=Linear(), time_indices_in_memory=5)
 
-RT = ClimaOcean.DatasetRestoring(T_meta, arch; kwargs...)
-RS = ClimaOcean.DatasetRestoring(S_meta, arch; kwargs...)
+RT = ClimaOcean.DatasetRestoring(T_meta_rest, arch; kwargs...)
+RS = ClimaOcean.DatasetRestoring(S_meta_rest, arch; kwargs...)

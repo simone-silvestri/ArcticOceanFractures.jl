@@ -2,6 +2,10 @@
 openssl = ">=3, <3.6"
 libstdcxx-ng = ">=3.4,<13.0"
 
+    [dependencies.copernicusmarine]
+    channel = "conda-forge"
+    version = "*"
+
     [dependencies.python]
     channel = "conda-forge"
     build = "*cpython*"

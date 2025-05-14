@@ -5,6 +5,7 @@ using PythonCall
 using ClimaSeaIce
 using Oceananigans
 using Oceananigans.Grids
+using Oceananigans.Units
 using Dates
 
 const start_date = Date(1996, 11, 1)
