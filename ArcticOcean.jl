@@ -12,9 +12,9 @@ const start_date = Date(1996, 11, 1)
 const end_date   = Date(1997, 06, 1)
 
 const arch = GPU()
-const Nx = 100# 4320
-const Ny = 10 #450
-const Nz = 10 #60
+const Nx = 4320
+const Ny = 450
+const Nz = 60
 
 include("arctic_grid.jl")
 include("glorys_restoring.jl")
