@@ -1,3 +1,4 @@
+using ClimaOcean.DataWrangling: NearestNeighborInpainting
 
 # A very diffusive ocean
 momentum_advection = WENOVectorInvariant()
@@ -15,4 +16,5 @@ ocean = ocean_simulation(grid;
                          forcing,
                          closure)
 
-set!(ocean.model; T=T_meta_init, S=S_meta_init)
+set!(ocean.model.tracers.T, T_meta_init; inpainting=NearestNeighborInpainting(10))
+set!(ocean.model.tracers.S, S_meta_init; inpainting=NearestNeighborInpainting(10))
