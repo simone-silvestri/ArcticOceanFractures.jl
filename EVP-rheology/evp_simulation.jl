@@ -22,7 +22,7 @@ SSS = view(ocean.model.tracers.S.data, :, :, grid.Nz)
 bottom_heat_boundary_condition = IceWaterThermalEquilibrium(SSS)
 
 SSU = view(ocean.model.velocities.u, :, :, grid.Nz)
-SSV = view(ocean.model.velocities.u, :, :, grid.Nz)
+SSV = view(ocean.model.velocities.v, :, :, grid.Nz)
 τo  = SemiImplicitStress(uₑ=SSU, vₑ=SSV)
 τua = Field{Face, Center, Nothing}(grid)
 τva = Field{Center, Face, Nothing}(grid)
@@ -40,11 +40,16 @@ set!(sea_ice.model.ice_thickness,     SI_meta_init; inpainting=nothing)
 set!(sea_ice.model.ice_concentration, SC_meta_init; inpainting=nothing)
 
 arctic = OceanSeaIceModel(ocean, sea_ice; atmosphere)
-arctic = Simulation(arctic, Δt=2minutes, stop_time=365days)
+arctic = Simulation(arctic, Δt=10, stop_time=30days)
 
 ArcticOcean.arctic_outputs!(arctic, "EVP-rheology/")
 
 # And add it as a callback to the simulation.
 add_callback!(arctic, ArcticOcean.progress, IterationInterval(10))
+
+run!(arctic)
+
+arctic.Δt = 120
+arctic.stop_time = 365days
 
 run!(arctic)

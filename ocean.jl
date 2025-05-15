@@ -4,17 +4,20 @@ using ClimaOcean.DataWrangling: NearestNeighborInpainting
 momentum_advection = WENOVectorInvariant()
 tracer_advection   = WENO(order=7)
 
+horizontal_Ri_filter = Oceananigans.TurbulenceClosures.FivePointHorizontalFilter()
 free_surface = SplitExplicitFreeSurface(grid; substeps=100)
-closure = ClimaOcean.OceanSimulations.default_ocean_closure()
+closure = Oceananigans.TurbulenceClosures.RiBasedVerticalDiffusivity(; horizontal_Ri_filter) # ClimaOcean.OceanSimulations.default_ocean_closure()
 
 forcing = (T=RT, S=RS)
+
+timestepper = :SplitRungeKutta3
 
 ocean = ocean_simulation(grid;
                          momentum_advection,
                          tracer_advection,
+                         timestepper,
                          free_surface,
-                         forcing,
+#                         forcing,
                          closure)
 
-set!(ocean.model.tracers.T, T_meta_init; inpainting=NearestNeighborInpainting(10))
-set!(ocean.model.tracers.S, S_meta_init; inpainting=NearestNeighborInpainting(10))
+set!(ocean.model, T=T_meta_init, S=S_meta_init) 

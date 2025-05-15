@@ -8,7 +8,7 @@ using Oceananigans.OutputReaders
 T_meta_init = Metadatum(:temperature; dataset=ECCO4Monthly(), date=start_date, dir="data/") 
 S_meta_init = Metadatum(:salinity;    dataset=ECCO4Monthly(), date=start_date, dir="data/") 
 
-SI_meta_init = Metadatum(:sea_ice_concentration; dataset=ECCO4Monthly(), date=start_date, dir="data/")
+SI_meta_init = Metadatum(:sea_ice_thickness;     dataset=ECCO4Monthly(), date=start_date, dir="data/")
 SC_meta_init = Metadatum(:sea_ice_concentration; dataset=ECCO4Monthly(), date=start_date, dir="data/")
 
 # Restore quite strongly between 40 and 42.5 north then decrease linearly between 42.5 and 45 north

@@ -1,4 +1,5 @@
 using Printf
+using Oceananigans.Utils: ConsecutiveIterations
 
 wall_time = Ref(time_ns())
 
@@ -44,17 +45,18 @@ function arctic_outputs!(simulation, folder)
     To = ocean.model.tracers.T
     uo = ocean.model.velocities.u
     vo = ocean.model.velocities.v
+    wo = ocean.model.velocities.w
     
     # Fluxes
-    Tu = ocean.model.interfaces.atmosphere_sea_ice_interface.temperature
-    Qˡ = ocean.model.interfaces.atmosphere_sea_ice_interface.fluxes.latent_heat
-    Qˢ = ocean.model.interfaces.atmosphere_sea_ice_interface.fluxes.sensible_heat
-    Qⁱ = ocean.model.interfaces.sea_ice_ocean_interface.fluxes.interface_heat
-    Qᶠ = ocean.model.interfaces.sea_ice_ocean_interface.fluxes.frazil_heat
-    Qᵗ = ocean.model.interfaces.net_fluxes.sea_ice_top.heat
-    Qᴮ = ocean.model.interfaces.net_fluxes.sea_ice_bottom.heat
-    τx = ocean.model.interfaces.net_fluxes.sea_ice_top.u
-    τy = ocean.model.interfaces.net_fluxes.sea_ice_top.v
+    Tu = simulation.model.interfaces.atmosphere_sea_ice_interface.temperature
+    Qˡ = simulation.model.interfaces.atmosphere_sea_ice_interface.fluxes.latent_heat
+    Qˢ = simulation.model.interfaces.atmosphere_sea_ice_interface.fluxes.sensible_heat
+    Qⁱ = simulation.model.interfaces.sea_ice_ocean_interface.fluxes.interface_heat
+    Qᶠ = simulation.model.interfaces.sea_ice_ocean_interface.fluxes.frazil_heat
+    Qᵗ = simulation.model.interfaces.net_fluxes.sea_ice_top.heat
+    Qᴮ = simulation.model.interfaces.net_fluxes.sea_ice_bottom.heat
+    τx = simulation.model.interfaces.net_fluxes.sea_ice_top.u
+    τy = simulation.model.interfaces.net_fluxes.sea_ice_top.v
 
     # Output writers for variables and averages
     simulation.output_writers[:vars] = JLD2Writer(sea_ice.model, (; h, ℵ, u, v, Tu, Qˡ, Qˢ, Qⁱ, Qᶠ, Qᵗ, Qᴮ, τx, τy),
@@ -69,7 +71,7 @@ function arctic_outputs!(simulation, folder)
     
     simulation.output_writers[:ovars] = JLD2Writer(ocean.model, (; uo, vo, wo, So, To), 
                                                    filename = folder * "ocean_quantities.jld2",
-                                                   schedule = ConsecutiveTimeInterval(1days),
+                                                   schedule = ConsecutiveIterations(TimeInterval(1days)),
                                                    overwrite_existing=true)
 
     simulation.output_writers[:averages] = JLD2Writer(sea_ice.model, (; uo, vo, wo, So, To), 
