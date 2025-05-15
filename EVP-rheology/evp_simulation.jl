@@ -47,9 +47,9 @@ ArcticOcean.arctic_outputs!(arctic, "EVP-rheology/")
 # And add it as a callback to the simulation.
 add_callback!(arctic, ArcticOcean.progress, IterationInterval(10))
 
-run!(arctic)
-
-arctic.Δt = 120
-arctic.stop_time = 365days
-
-run!(arctic)
+# run!(arctic)
+# 
+# arctic.Δt = 120
+# arctic.stop_time = 365days
+# 
+# run!(arctic)
