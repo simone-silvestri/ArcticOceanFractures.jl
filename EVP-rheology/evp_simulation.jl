@@ -49,7 +49,6 @@ ArcticOcean.arctic_outputs!(arctic, "EVP-rheology/")
 # And add it as a callback to the simulation.
 add_callback!(arctic, ArcticOcean.progress, IterationInterval(10))
 
-
 # And add it as a callback to the simulation.
 wizard = TimeStepWizard(cfl=0.7, max_change=1.1, max_Δt=6minutes)
 
@@ -85,4 +84,3 @@ end
 arctic.callbacks[:wizard] = Callback(add_wizard!, IterationInterval(10))
 
 run!(arctic)
-
