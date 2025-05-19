@@ -53,6 +53,8 @@ roughness_lengths = InterfaceComputations.SimilarityScales(InterfaceComputations
 
 flux_formulation = InterfaceComputations.SimilarityTheoryFluxes(; roughness_lengths)
 
+@show flux_formulation
+
 radiation = Radiation(sea_ice_albedo=0.7)
 
 interfaces = InterfaceComputations.ComponentInterfaces(atmosphere, ocean; 
