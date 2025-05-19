@@ -3,7 +3,7 @@ using ClimaOcean.ECCO
 using ClimaOcean.DataWrangling
 using Oceananigans
 using Oceananigans.OutputReaders
-
+using Oceananigans.OutputReaders: Cyclical
 
 T_meta_init = Metadatum(:temperature; dataset=ECCO4Monthly(), date=start_date, dir="data/") 
 S_meta_init = Metadatum(:salinity;    dataset=ECCO4Monthly(), date=start_date, dir="data/") 
@@ -22,7 +22,7 @@ end
 T_meta_rest = Metadata(:temperature; dataset=ECCO4Monthly(), start_date, end_date, dir="data/") 
 S_meta_rest = Metadata(:salinity;    dataset=ECCO4Monthly(), start_date, end_date, dir="data/") 
 
-kwargs = (; rate = 1/10days, mask, time_indexing=Linear(), time_indices_in_memory=5)
+kwargs = (; rate = 1/10days, mask, time_indexing=Cyclical(), time_indices_in_memory=2)
 
 RT = ClimaOcean.DatasetRestoring(T_meta_rest, arch; kwargs...)
 RS = ClimaOcean.DatasetRestoring(S_meta_rest, arch; kwargs...)

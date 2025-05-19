@@ -17,7 +17,7 @@ ocean = ocean_simulation(grid;
                          tracer_advection,
                          timestepper,
                          free_surface,
-#                         forcing,
+                         forcing,
                          closure)
 
 set!(ocean.model, T=T_meta_init, S=S_meta_init) 

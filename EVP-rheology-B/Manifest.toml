@@ -203,8 +203,8 @@ version = "0.17.0+0"
 
 [[deps.ClimaOcean]]
 deps = ["Adapt", "CFTime", "CUDA", "ClimaSeaIce", "CubicSplines", "DataDeps", "Dates", "Downloads", "ImageMorphology", "JLD2", "KernelAbstractions", "MPI", "NCDatasets", "Oceananigans", "OffsetArrays", "PrecompileTools", "Printf", "Scratch", "SeawaterPolynomials", "StaticArrays", "Statistics", "SurfaceFluxes", "Thermodynamics", "ZipFile"]
-git-tree-sha1 = "c8a7ad7e2de0509ea7c9e3df4865cfc2ab9aa0cc"
-repo-rev = "main"
+git-tree-sha1 = "837e08ea0ad72d97e13d474ffe21ac480d9cc00a"
+repo-rev = "ss/b-grid-sea-ice"
 repo-url = "https://github.com/CliMA/ClimaOcean.jl.git"
 uuid = "0376089a-ecfe-4b0e-a64f-9c555d74d754"
 version = "0.6.8"
@@ -220,8 +220,8 @@ version = "0.6.8"
 
 [[deps.ClimaSeaIce]]
 deps = ["Adapt", "KernelAbstractions", "Oceananigans", "RootSolvers", "Roots", "SeawaterPolynomials"]
-git-tree-sha1 = "8b2cc4251ebbcf7c8b77f479985c373dbe3acbfe"
-repo-rev = "main"
+git-tree-sha1 = "7fcb65ae747cf35ca1c79185bbdfaa61ee5a5022"
+repo-rev = "ss/b-grid-dynamics"
 repo-url = "https://github.com/CliMA/ClimaSeaIce.jl.git"
 uuid = "6ba0ff68-24e6-4315-936c-2e99227c95a4"
 version = "0.2.6"

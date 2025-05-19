@@ -7,8 +7,8 @@ using Oceananigans.Grids
 using Oceananigans.Units
 using Dates
 
-const start_date = DateTime(1996, 06, 1)
-const end_date   = DateTime(1997, 06, 1)
+const start_date  = DateTime(1996, 1,   1)
+const end_date    = DateTime(1997, 12, 31)
 
 const arch = GPU()
 const Nx = 3600
