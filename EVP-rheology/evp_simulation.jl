@@ -41,7 +41,25 @@ sea_ice = ClimaOcean.SeaIceSimulations.sea_ice_simulation(grid; bottom_heat_boun
 set!(sea_ice.model.ice_thickness,     SI_meta_init; inpainting=nothing)
 set!(sea_ice.model.ice_concentration, SC_meta_init; inpainting=nothing)
 
-arctic = OceanSeaIceModel(ocean, sea_ice; atmosphere)
+#####
+##### Interface fluxes
+#####
+
+using ClimaOcean.OceanSeaIceModels.InterfaceComputations
+
+roughness_lengths = InterfaceComputations.SimilarityScales(InterfaceComputations.MomentumRoughnessLength(wave_formulation=0.018),
+                                                           InterfaceComputations.ScalarRoughnessLength(),
+                                                           InterfaceComputations.ScalarRoughnessLength())
+
+flux_formulation = InterfaceComputations.SimilarityTheoryFluxes(; roughness_lengths)
+
+radiation = Radiation(sea_ice_albedo=0.7)
+
+interfaces = InterfaceComputations.ComponentInterfaces(atmosphere_ocean_flux_formulation=flux_formulation,
+                                                       atmosphere_sea_ice_flux_formulation=flux_formulation,
+                                                       radiation)
+
+arctic = OceanSeaIceModel(ocean, sea_ice; atmosphere, interfaces, radiation)
 arctic = Simulation(arctic, Δt=10, stop_time=30days)
 
 ArcticOcean.arctic_outputs!(arctic, "EVP-rheology/")
