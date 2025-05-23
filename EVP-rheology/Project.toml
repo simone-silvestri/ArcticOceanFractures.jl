@@ -1,5 +1,8 @@
 [deps]
+CUDA_Runtime_jll = "76a88914-d11a-5bdc-97e0-2f5a05c973a2"
 ClimaOcean = "0376089a-ecfe-4b0e-a64f-9c555d74d754"
 ClimaSeaIce = "6ba0ff68-24e6-4315-936c-2e99227c95a4"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
 Oceananigans = "9e8cae18-63c1-5223-a75c-80ca9d6e9a09"
+Preferences = "21216c6a-2e73-6563-6e65-726566657250"
 PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
