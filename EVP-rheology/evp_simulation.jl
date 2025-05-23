@@ -19,25 +19,7 @@ using ClimaSeaIce.SeaIceThermodynamics: IceWaterThermalEquilibrium
 using ClimaSeaIce.SeaIceMomentumEquations
 using ClimaSeaIce.Rheologies
 
-# Remember to pass the SSS as a bottom bc to the sea ice!
-SSS = view(ocean.model.tracers.S.data, :, :, grid.Nz)
-bottom_heat_boundary_condition = IceWaterThermalEquilibrium(SSS)
-
-SSU = view(ocean.model.velocities.u, :, :, grid.Nz)
-SSV = view(ocean.model.velocities.v, :, :, grid.Nz)
-τo  = SemiImplicitStress(uₑ=SSU, vₑ=SSV)
-τua = Field{Face, Center, Nothing}(grid)
-τva = Field{Center, Face, Nothing}(grid)
-
-dynamics = SeaIceMomentumEquation(grid;
-                                  coriolis = ocean.model.coriolis,
-                                  top_momentum_stress = (u=τua, v=τva),
-                                  bottom_momentum_stress = τo,
-                                  ocean_velocities = (u=0.1*SSU, v=0.1*SSV),
-                                  rheology = ElastoViscoPlasticRheology(),
-                                  solver = SplitExplicitSolver(120))
-
-sea_ice = ClimaOcean.SeaIceSimulations.sea_ice_simulation(grid; bottom_heat_boundary_condition, dynamics, advection=WENO(order=7))
+sea_ice = ClimaOcean.SeaIceSimulations.sea_ice_simulation(grid, ocean; advection=WENO(order=7))
 set!(sea_ice.model.ice_thickness,     SI_meta_init; inpainting=nothing)
 set!(sea_ice.model.ice_concentration, SC_meta_init; inpainting=nothing)
 
@@ -45,24 +27,10 @@ set!(sea_ice.model.ice_concentration, SC_meta_init; inpainting=nothing)
 ##### Interface fluxes
 #####
 
-using ClimaOcean.OceanSeaIceModels.InterfaceComputations
-
-roughness_lengths = InterfaceComputations.SimilarityScales(InterfaceComputations.MomentumRoughnessLength(wave_formulation=0.018),
-                                                           InterfaceComputations.ScalarRoughnessLength(),
-                                                           InterfaceComputations.ScalarRoughnessLength())
-
-flux_formulation = InterfaceComputations.SimilarityTheoryFluxes(; roughness_lengths)
-
 @show flux_formulation
 
 radiation = Radiation(sea_ice_albedo=0.7)
-
-interfaces = InterfaceComputations.ComponentInterfaces(atmosphere, ocean; 
-                                                       atmosphere_ocean_flux_formulation=flux_formulation,
-                                                       atmosphere_sea_ice_flux_formulation=flux_formulation,
-                                                       radiation)
-
-arctic = OceanSeaIceModel(ocean, sea_ice; atmosphere, interfaces, radiation)
+arctic = OceanSeaIceModel(ocean, sea_ice; atmosphere, radiation)
 arctic = Simulation(arctic, Δt=10, stop_time=30days)
 
 ArcticOcean.arctic_outputs!(arctic, "EVP-rheology/")
