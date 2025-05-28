@@ -17,7 +17,7 @@ using Oceananigans.Operators: Δx⁻¹ᶠᶜᶜ, Δy⁻¹ᶜᶠᶜ
 using Oceananigans.Units
 using ClimaSeaIce.Rheologies
 
-SSS = interior(ocean.model.tracers.S.data, :, :, grid.Nz:grid.Nz)
+SSS = interior(ocean.model.tracers.S, :, :, grid.Nz:grid.Nz)
 bottom_heat_boundary_condition = IceWaterThermalEquilibrium(SSS)
 
 SSU = view(ocean.model.velocities.u, :, :, grid.Nz)
