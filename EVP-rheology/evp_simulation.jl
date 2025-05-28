@@ -18,9 +18,7 @@ using Oceananigans.Units
 using ClimaSeaIce.Rheologies
 using ClimaOcean.SeaIceSimulations: sea_ice_dynamics
 
-
-
-SSS = view(ocean.model.tracers.S.data, :, :, grid.Nz)
+SSS = interior(ocean.model.tracers.S.data, :, :, grid.Nz:grid.Nz)
 bottom_heat_boundary_condition = IceWaterThermalEquilibrium(SSS)
 
 SSU = view(ocean.model.velocities.u, :, :, grid.Nz)
