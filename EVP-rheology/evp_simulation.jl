@@ -15,7 +15,10 @@ using Oceananigans
 using Oceananigans.Grids: AbstractGrid
 using Oceananigans.Operators: Δx⁻¹ᶠᶜᶜ, Δy⁻¹ᶜᶠᶜ
 using Oceananigans.Units
+using ClimaSeaIce
+using ClimaSeaIce.SeaIceMomentumEquations
 using ClimaSeaIce.Rheologies
+using ClimaSeaIce: IceWaterThermalEquilibrium
 
 SSS = interior(ocean.model.tracers.S, :, :, grid.Nz:grid.Nz)
 bottom_heat_boundary_condition = IceWaterThermalEquilibrium(SSS)
