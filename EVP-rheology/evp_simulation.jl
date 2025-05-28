@@ -16,6 +16,7 @@ using Oceananigans.Grids: AbstractGrid
 using Oceananigans.Operators: Δx⁻¹ᶠᶜᶜ, Δy⁻¹ᶜᶠᶜ
 using Oceananigans.Units
 using ClimaSeaIce
+using ClimaSeaIce.SeaIceThermodynamics.HeatBoundaryConditions: IceWaterThermalEquilibrium
 using ClimaSeaIce.SeaIceMomentumEquations
 using ClimaSeaIce.Rheologies
 using ClimaSeaIce: IceWaterThermalEquilibrium
