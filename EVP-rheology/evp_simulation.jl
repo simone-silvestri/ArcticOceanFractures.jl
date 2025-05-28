@@ -16,8 +16,29 @@ using Oceananigans.Grids: AbstractGrid
 using Oceananigans.Operators: Δx⁻¹ᶠᶜᶜ, Δy⁻¹ᶜᶠᶜ
 using Oceananigans.Units
 using ClimaSeaIce.Rheologies
+using ClimaOcean.SeaIceSimulations: sea_ice_dynamics
 
-sea_ice = ClimaOcean.SeaIceSimulations.sea_ice_simulation(grid, ocean; advection=WENO(order=7))
+
+
+SSS = view(ocean.model.tracers.S.data, :, :, grid.Nz)
+bottom_heat_boundary_condition = IceWaterThermalEquilibrium(SSS)
+
+SSU = view(ocean.model.velocities.u, :, :, grid.Nz)
+SSV = view(ocean.model.velocities.v, :, :, grid.Nz)
+coriolis = ocean.model.coriolis
+
+τo  = SemiImplicitStress(uₑ=SSU, vₑ=SSV, Cᴰ=sea_ice_ocean_drag_coefficient)
+τua = Field{Face, Center, Nothing}(grid)
+τva = Field{Center, Face, Nothing}(grid)
+
+dynamics = SeaIceMomentumEquation(grid;
+                                  coriolis,
+                                  top_momentum_stress = (u=τua, v=τva),
+                                  bottom_momentum_stress = τo,
+                                  solver = SplitExplicitSolver(150))
+
+sea_ice = sea_ice_simulation(grid; bottom_heat_boundary_condition, dynamics, advection=WENO(order=7))
+
 set!(sea_ice.model.ice_thickness,     SI_meta_init; inpainting=nothing)
 set!(sea_ice.model.ice_concentration, SC_meta_init; inpainting=nothing)
 
@@ -32,10 +53,10 @@ arctic = Simulation(arctic, Δt=10, stop_time=30days)
 ArcticOcean.arctic_outputs!(arctic, "EVP-rheology/")
 
 # And add it as a callback to the simulation.
-add_callback!(arctic, ArcticOcean.progress, IterationInterval(10))
+add_callback!(arctic, ArcticOcean.progress, IterationInterval(1))
 
 # And add it as a callback to the simulation.
-wizard = TimeStepWizard(cfl=0.7, max_change=1.1, max_Δt=6minutes)
+wizard = TimeStepWizard(cfl=0.7, max_change=1.001, max_Δt=10minutes)
 
 function sea_ice_cell_advection_timescale(grid, velocities)
     u, v = velocities
@@ -66,6 +87,6 @@ function add_wizard!(sim)
      sim.Δt = min(ocean.Δt, Δti)
 end
 
-arctic.callbacks[:wizard] = Callback(add_wizard!, IterationInterval(10))
+arctic.callbacks[:wizard] = Callback(add_wizard!, IterationInterval(1))
 
 run!(arctic)
